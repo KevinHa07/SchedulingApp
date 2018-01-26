@@ -1,4 +1,4 @@
-
+package BFS;
 
 import java.util.ArrayList;
 
@@ -11,11 +11,13 @@ public class ClassInfo {
 	private int units;
 	private String grade;
 	private boolean completed;
-	private int rank;
+	private boolean isElective;
 	
+
+	//constructor if class has both prerequisite and corequisite
 	public ClassInfo(String name, int courseNumber, 
 			ArrayList<ClassInfo> corequisites, ArrayList<ClassInfo> prerequisites,
-			int units, String grade, boolean completed, int rank) {
+			int units, String grade, boolean completed, boolean elective) {
 		this.name = name;
 		this.courseNumber = courseNumber;
 		this.corequisites = corequisites;
@@ -23,12 +25,13 @@ public class ClassInfo {
 		this.units = units;
 		this.grade = grade;
 		this.completed = completed;
-		this.rank = rank;
+		this.isElective = elective;
 	}
 	
+	//constructor if class has just prerequisite
 	public ClassInfo(String name, int courseNumber, 
 			ArrayList<ClassInfo> prerequisites,
-			int units, String grade, boolean completed, int rank) {
+			int units, String grade, boolean completed, boolean elective) {
 		this();
 		this.name = name;
 		this.courseNumber = courseNumber;
@@ -36,29 +39,31 @@ public class ClassInfo {
 		this.units = units;
 		this.grade = grade;
 		this.completed = completed;
-		this.rank = rank;
+		this.isElective = elective;
 	}
 	
+	//constructor if class has just corequisite
 	public ClassInfo(String name, int courseNumber, 
 			int units, String grade, 
-			ArrayList<ClassInfo> corequisites, boolean completed, int rank) {
+			ArrayList<ClassInfo> corequisites, boolean completed, boolean elective) {
 		this.name = name;
 		this.courseNumber = courseNumber;
 		this.corequisites = corequisites;
 		this.units = units;
 		this.grade = grade;
 		this.completed = completed;
-		this.rank = rank;
+		this.isElective = elective;
 	}
 	
+	//constructor if class has neither prerequisite and corequisite
 	public ClassInfo(String name, int courseNumber,
-			int units, String grade, boolean completed, int rank) {
+			int units, String grade, boolean completed, boolean elective) {
 		this.name = name;
 		this.courseNumber = courseNumber;
 		this.units = units;
 		this.grade = grade;
 		this.completed = completed;
-		this.rank = rank;
+		this.isElective = elective;
 	}
 	
 	public ClassInfo() {
@@ -121,12 +126,12 @@ public class ClassInfo {
 		this.completed = completed;
 	}
 	
-	public int getRank() {
-		return rank;
+	public boolean isElective() {
+		return isElective;
 	}
 
-	public void setRank(int rank) {
-		this.rank = rank;
+	public void setElective(boolean isElective) {
+		this.isElective = isElective;
 	}
 	
 	private String convertToString(ArrayList<ClassInfo> ci) {
@@ -158,6 +163,5 @@ public class ClassInfo {
 		}
 		
 	}
-	//rank doesn't need to be displayed
 	
 }

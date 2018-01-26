@@ -1,3 +1,5 @@
+package BFS;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -13,9 +15,8 @@ public class FileInput {
 		this.csvFile = new File(file);
 		readCSV();
 	} 
-	
+	//reads csv file and prints it out
 	private void readCSV() {
-		//String csvFile = "/Users/George/Downloads/Sample_Classes.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -44,6 +45,7 @@ public class FileInput {
         }
 	}
 	
+	
 	public ArrayList<ClassInfo> getListOfClassInfo(){
 		if(this.classes != null) {
 			return this.classes;
@@ -51,12 +53,14 @@ public class FileInput {
 		return null;
 	}
 	
+	//puts the class info into an arraylist
 	private void addToClasses(String[] classInfo) {
 		ClassInfo ci = null;
 		String delimeter = "/";
         if(classInfo[2].equals("") && classInfo[3].equals("")) {
         	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-        			Integer.parseInt(classInfo[4]), classInfo[5], false, Integer.parseInt(classInfo[7]));
+        			Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));
+        	
         	this.classes.add(ci);
         	
         }
@@ -105,6 +109,7 @@ public class FileInput {
         
 	}
 	
+	//inserts just prerequisite 
 	private void insertPrereqisites(String[] classInfo, String[] prerequisites) {
 		ClassInfo ci;
 		ArrayList<ClassInfo> prereqs = new ArrayList<ClassInfo>();
@@ -117,11 +122,13 @@ public class FileInput {
     	}
     	
     		ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-    				prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, Integer.parseInt(classInfo[7]));
+    				prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));
+    		
     		this.classes.add(ci);
     	
 	}
 	
+	//inserts just corequisites
 	private void insertCorequisites(String[] classInfo, String[] corequisites) {
 		ClassInfo ci;
 		ArrayList<ClassInfo> coreqs = new ArrayList<ClassInfo>();
@@ -136,11 +143,13 @@ public class FileInput {
     	}
     	
     		ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), coreqs, 
-    				Integer.parseInt(classInfo[4]),  classInfo[5], false,  Integer.parseInt(classInfo[7]));
+    				Integer.parseInt(classInfo[4]),  classInfo[5], false, checkIsElective(classInfo[7]));
+    		
     		this.classes.add(ci);
     	
 	}
 	
+	//inserts both corequisites and prerequisites
 	private void insertCorequisitesPrerequisites(String[] classInfo, String[] prerequisites, 
 			 String[] corequisites) {
 		ClassInfo ci;
@@ -153,8 +162,7 @@ public class FileInput {
     			}
     		}
     	}
-    	//need fix
-    	//cant find class when its not in database yet
+    	
     	for(int i = 0; i < corequisites.length; i++) {
     		for(int j = 0; j < this.classes.size(); j++) {
     			if(corequisites[i].toLowerCase().equals(this.classes.get(j).getName().toLowerCase())){
@@ -165,10 +173,19 @@ public class FileInput {
     	
     	
     		ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-    				coreqs, prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, Integer.parseInt(classInfo[7]));
+    				coreqs, prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));
+    		
     		this.classes.add(ci);
     	
-    	
+	}
+	
+	private Boolean checkIsElective(String isElective) {
+		if(isElective.equals("N")) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	
