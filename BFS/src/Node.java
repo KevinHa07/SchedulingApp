@@ -10,6 +10,7 @@ public class Node<T>{
 	private List<Node> children = new ArrayList<>();
     private Node<?> parent = null;
     private int numOfElectiveUnits = 0;
+    private boolean isGoal = false;
     
 
 	@SuppressWarnings("rawtypes")
@@ -72,7 +73,7 @@ public class Node<T>{
 		return numOfElectiveUnits;
 	}
 
-	public void setNumOfElectiveUnits(int numOfElectives) {
+	public void addNumOfElectiveUnits(int numOfElectives) {
 		this.numOfElectiveUnits += numOfElectives;
 	}
 	
@@ -123,5 +124,15 @@ public class Node<T>{
 	public ArrayList<ClassInfo> getTakenClasses(){
 		return this.TakenClasses;
 	}
+
+	public boolean isGoal() {
+		return isGoal;
+	}
+
+	public void setGoal(boolean isGoal) {
+		this.isGoal = isGoal;
+	}
+	
+	
 	
 }

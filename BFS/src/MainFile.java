@@ -6,6 +6,8 @@ import BFS.DisplayClass;
 //;/import BFS.Combination;
 
 public class MainFile { 
+	
+	protected FileInput f;
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {

@@ -29,7 +29,7 @@ public class MakeTree {
 		
 		for(ClassInfo c : classesTaken) {
 			if(c.isElective()) {
-				parentNode.setNumOfElectiveUnits(c.getUnits());
+				parentNode.addNumOfElectiveUnits(c.getUnits());
 			}
 		}
 		
@@ -55,7 +55,7 @@ public class MakeTree {
 	public ArrayList<ArrayList<ClassInfo>> findAvailAndCombo(Node<?> classesTaken, ArrayList<ClassInfo> listOfClasses, int unitsMin, int unitsMax){
 		
 		//find classes that are available to take next
-		AvailableClasses2 av = new AvailableClasses2(classesTaken.getTakenClasses());
+		AvailableClasses av = new AvailableClasses(classesTaken);
 		ArrayList<ClassInfo> available;
 		available = av.checkAvailableClasses(listOfClasses);
 				
@@ -81,7 +81,7 @@ public class MakeTree {
 		ArrayList<ArrayList<ClassInfo>> combOfClasses;
 		ArrayList<ClassInfo> listOfClasses = listOfClassInfo;
 		
-		combOfClasses = findAvailAndCombo(classesTaken, listOfClasses, unitsMin, unitsMax);
+		combOfClasses = findAvailAndCombo(classesTaken.getListNodes(), listOfClasses, unitsMin, unitsMax);
 		
 		//turn combinations into nodes and add those nodes as children
 		ArrayList<ClassInfo> childList = new ArrayList<ClassInfo>();
@@ -90,18 +90,20 @@ public class MakeTree {
 			Node<ArrayList<ClassInfo>> nodeClasses = new Node<ArrayList<ClassInfo>>(null);
 			childList = createNode(combOfClasses.get(i));
 			
-			
 			nodeClasses.setData(childList);
 			parent.addChild(nodeClasses);
 			nodeClasses.addToPath(nodeClasses, parent.getPath());
-			int currentElectiveUnits = nodeClasses.getParent().getNumOfElectiveUnits();
-			nodeClasses.setNumOfElectiveUnits(currentElectiveUnits);
-			for(ClassInfo c : combOfClasses.get(i)) {
+			//make sure to use getNumOfElectives method in combinations class to get the correct combination of classes and not add too many elective units
+			int currentElectiveUnits = nodeClasses.getParent().getNumOfElectiveUnits();//get amount of elective units from parent node and adds it to current node
+			nodeClasses.addNumOfElectiveUnits(currentElectiveUnits);//adds total elective units taken to current node
+			for(ClassInfo c : combOfClasses.get(i)) { //this goes through the children for this node to check amount of electives and check goal node
 				if(c.isElective()) {
-					nodeClasses.setNumOfElectiveUnits(c.getUnits());
+					nodeClasses.addNumOfElectiveUnits(c.getUnits());//add the amount of elective units taken from a combination of classes to current node
+				}
+				if(c.getName().toLowerCase().equals("cs4962") || c.getName().toLowerCase().equals("cs4963")) {//temporary check goal node fix 
+					nodeClasses.setGoal(true);
 				}
 			}
-			
 			//add to queue
 			queue.add(nodeClasses);
 		}

@@ -7,14 +7,11 @@ public class FileInput {
 	private ArrayList<ClassInfo> classes;
 	private File csvFile;
 	
-	public FileInput(){
-		
-	} 
-	
 	public FileInput(String file) throws IOException {
 		this.csvFile = new File(file);
 		readCSV();
-	} 
+	}
+	
 	//reads csv file and prints it out
 	private void readCSV() {
         BufferedReader br = null;
@@ -57,14 +54,14 @@ public class FileInput {
 	private void addToClasses(String[] classInfo) {
 		ClassInfo ci = null;
 		String delimeter = "/";
-        if(classInfo[2].equals("") && classInfo[3].equals("")) {
+        if(classInfo[2].equals("") && classInfo[3].equals("")) {//if there are no prerequisites
         	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
         			Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));
         	
         	this.classes.add(ci);
         	
         }
-        else if(!classInfo[3].equals("") && classInfo[2].equals("")){
+        else if(!classInfo[3].equals("") && classInfo[2].equals("")){//if there are no corequisites
         	String[] prerequisites;
         	if(classInfo[3].length() <= 1) {
         		prerequisites = classInfo[3].split(",");
@@ -76,7 +73,7 @@ public class FileInput {
         	insertPrereqisites(classInfo, prerequisites);
         	
         }
-        else if(classInfo[3].equals("") && !classInfo[2].equals("")){
+        else if(classInfo[3].equals("") && !classInfo[2].equals("")){//if there are no prerequisites
         	String[] corequisites;
         	if(classInfo[2].length() <= 1) {
         		corequisites = classInfo[2].split(",");
@@ -87,7 +84,7 @@ public class FileInput {
         	insertCorequisites(classInfo, corequisites);
         	
         }
-        else if(!classInfo[2].equals("") && !classInfo[3].equals("")){
+        else if(!classInfo[2].equals("") && !classInfo[3].equals("")){//if there are prerequisites and corequisites 
         	String[] prerequisites;
         	if(classInfo[3].length() <= 1) {
         		prerequisites = classInfo[3].split(",");
@@ -105,11 +102,9 @@ public class FileInput {
         	insertCorequisitesPrerequisites(classInfo, prerequisites, corequisites);
         }
         
-        
-        
 	}
 	
-	//inserts just prerequisite 
+	//inserts prerequisite list to a classinfo object by comparing class name since the prerequisite list comes from csv file
 	private void insertPrereqisites(String[] classInfo, String[] prerequisites) {
 		ClassInfo ci;
 		ArrayList<ClassInfo> prereqs = new ArrayList<ClassInfo>();
@@ -120,15 +115,13 @@ public class FileInput {
     			}
     		}
     	}
-    	
-    		ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-    				prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));
-    		
-    		this.classes.add(ci);
+    	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
+   				prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7])); 
+   		this.classes.add(ci);
     	
 	}
 	
-	//inserts just corequisites
+	//inserts corequisites list to a classinfo object by comparing class name since the corequisite list comes from csv file
 	private void insertCorequisites(String[] classInfo, String[] corequisites) {
 		ClassInfo ci;
 		ArrayList<ClassInfo> coreqs = new ArrayList<ClassInfo>();
@@ -141,15 +134,12 @@ public class FileInput {
     			}
     		}
     	}
-    	
-    		ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), coreqs, 
-    				Integer.parseInt(classInfo[4]),  classInfo[5], false, checkIsElective(classInfo[7]));
-    		
-    		this.classes.add(ci);
-    	
+    	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), coreqs, 
+    			Integer.parseInt(classInfo[4]),  classInfo[5], false, checkIsElective(classInfo[7]));
+   		this.classes.add(ci);
 	}
 	
-	//inserts both corequisites and prerequisites
+	//inserts both corequisites and prerequisites list to a classinfo object by comparing class name since the both lists comes from csv file
 	private void insertCorequisitesPrerequisites(String[] classInfo, String[] prerequisites, 
 			 String[] corequisites) {
 		ClassInfo ci;
@@ -170,15 +160,12 @@ public class FileInput {
     			}
     		}
     	}
-    	
-    	
-    		ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-    				coreqs, prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));
-    		
-    		this.classes.add(ci);
-    	
+    	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
+    			coreqs, prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));	
+   		this.classes.add(ci); 	
 	}
 	
+	//checks to see if a class is an elective
 	private Boolean checkIsElective(String isElective) {
 		if(isElective.equals("N")) {
 			return false;
@@ -187,8 +174,6 @@ public class FileInput {
 			return true;
 		}
 	}
-	
-	
 	
 }
 
