@@ -104,7 +104,7 @@ public class Node<T>{
 	}
 	
 	private void setTakenClasses(){
-		if(this.path.get(this.path.size() - 1).getData() == null) {
+		if(this.path.get(this.path.size() - 1).getData() == null) {//get the previous node from the path and get the list of  classes taken from that point on the path
 			return;
 		}
 		for(Node<ArrayList<ClassInfo>> n : this.path) {

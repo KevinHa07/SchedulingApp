@@ -13,7 +13,7 @@ public class AvailableClasses {
 	long startTime = MakeTree.startTime;
 	private Set<ClassInfo> setOfAvailableClasses;
 	
-	
+	//takes in a node that has an arraylist of classInfo 
 	public AvailableClasses(Node<?> classtaken) {
 		this.current = classtaken;
 		
@@ -32,7 +32,7 @@ public class AvailableClasses {
 			classesTaken.addAll(currClassesTaken.get(i).getData());
 		}
 		
-		//if student hasn't taken any classes, add classes that has no prerequisites into available class array
+		//if student hasn't taken any classes, add classes that has no prerequisites into available class arraylist
 		if(classesTaken.size() == 0) {
 			for(ClassInfo aClass: setOfAvailableClasses){
 				if(aClass.getPrerequisites() == null){
@@ -57,21 +57,18 @@ public class AvailableClasses {
 //			System.exit(0);
 //		}
 		
-		setOfAvailableClasses.removeAll(this.classesTaken); //removes all classes taken from all classes
+		setOfAvailableClasses.removeAll(this.classesTaken); //removes all classes taken from the list of classes to have it only have available classes for student to take
 
-		for(ClassInfo aClass: this.setOfAvailableClasses){
-			if(aClass.getPrerequisites() == null){ //if no prerequisite, add class to available classes that user can add 
+		for(ClassInfo aClass: this.setOfAvailableClasses){//goes through set of available classes
+			if(aClass.getPrerequisites() == null){ //if no prerequisite, add class to available classes that user can take
 				this.availableClasses.add(aClass);	
 			}
 					
-			//if there's a prerequisite, check to see if the student has taken the classes needed to add class to available classes that user can add
+			//if there's a prerequisite, check to see if the student has taken the classes needed to add class to available classes that user can take
 			else if(aClass.getPrerequisites() != null && this.classesTaken.containsAll(aClass.getPrerequisites())) { 
-				//send availableClasses and aCLass to method to see if aClass is already in there
 				this.availableClasses.add(aClass);	
 			}
-				
 		}	
-
 		return this.availableClasses;
 		
 	}
@@ -97,19 +94,19 @@ public class AvailableClasses {
 //		}
 //	}
 	
-	public boolean checkGoalNode() {
-		for(ClassInfo c: this.classesTaken) {
-			if(c.getName().toLowerCase().equals("cs4963")) {
-				for(ClassInfo i: this.classesTaken){
-					if(i.getName().toLowerCase().equals("cs4962")){
-						return true;
-					}
-				}
-				return false;
-				
-			}
-		}
-		return false;
-	}
+//	public boolean checkGoalNode() {
+//		for(ClassInfo c: this.classesTaken) {
+//			if(c.getName().toLowerCase().equals("cs4963")) {
+//				for(ClassInfo i: this.classesTaken){
+//					if(i.getName().toLowerCase().equals("cs4962")){
+//						return true;
+//					}
+//				}
+//				return false;
+//				
+//			}
+//		}
+//		return false;
+//	}
 }
 
