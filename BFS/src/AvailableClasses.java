@@ -1,112 +1,65 @@
 package BFS;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import BFS.MakeTree;
 
 public class AvailableClasses {
 
-	private Node<?> current;
-	private ArrayList<ClassInfo> classesTaken = new ArrayList<ClassInfo>();
-	private ArrayList<ClassInfo> availableClasses = new ArrayList<ClassInfo>();
+	private List<String> current;
+	
 	long startTime = MakeTree.startTime;
-	private Set<ClassInfo> setOfAvailableClasses;
 	
 	//takes in a node that has an arraylist of classInfo 
-	public AvailableClasses(Node<?> classtaken) {
+	public AvailableClasses(List<String> classtaken) {
 		this.current = classtaken;
 		
 	}
 	
 	//This method takes in the arraylist of ClassInfo to remove classes that the student has already taken from an arraylist of all classes
 	@SuppressWarnings("unchecked")
-	public ArrayList<ClassInfo> checkAvailableClasses(ArrayList<ClassInfo> allClasses) {
+	public List<String> checkAvailableClasses(List<String> allClasses, Map<String, ClassInfo> allClassInfo) {
 		//creates a set of all classes
-		setOfAvailableClasses = new HashSet<ClassInfo>(allClasses);
-		ArrayList<Node<ArrayList<ClassInfo>>> currClassesTaken; //creates an arraylist of nodes containing arraylists of classinfo objects
-		currClassesTaken = (ArrayList<Node<ArrayList<ClassInfo>>>) this.current.getData();//this is the list of classes taken or classes to be taken from the roadmap
+		Set<String> setOfAvailableClasses = new HashSet<String>(allClasses);
 		
-		//adds classes from the node into an arraylist
-		for(int i = 0; i < currClassesTaken.size(); i++){
-			classesTaken.addAll(currClassesTaken.get(i).getData());
-		}
+		setOfAvailableClasses.removeAll(current);//removes all classes taken from the list of classes to have it only have available classes for student to take
 		
+		List<String> availableClasses = new ArrayList<>();
 		//if student hasn't taken any classes, add classes that has no prerequisites into available class arraylist
-		if(classesTaken.size() == 0) {
-			for(ClassInfo aClass: setOfAvailableClasses){
-				if(aClass.getPrerequisites() == null){
-					this.availableClasses.add(aClass);
+		if(current.size() == 0) {
+			for(String className: setOfAvailableClasses){
+				if(allClassInfo.containsKey(className)) {
+					ClassInfo classInfo = allClassInfo.get(className);
+					if(classInfo.getPrerequisites() == null){
+						availableClasses.add(className);
+					}
+				}
+				
+			}
+			return availableClasses;
+		}
+
+		for(String className: setOfAvailableClasses){
+			if(allClassInfo.containsKey(className)) {
+				ClassInfo classInfo = allClassInfo.get(className);
+				if(classInfo.getPrerequisites() == null){
+					availableClasses.add(className);
+				}
+				//if there's a prerequisite, check to see if the student has taken the classes needed to add class to available classes that user can take
+				else if(classInfo.getPrerequisites() != null && current.containsAll(classInfo.getPrerequisites())) { 
+					availableClasses.add(className);	
 				}
 			}
-			return this.availableClasses;
 		}
-		
-//		if(checkGoalNode()){ //instead of checking each class, make the whole arraylist a goal. Make into hashset containsall
-//			for(int i = 0; i < currClassesTaken.size(); i++){
-//				for(int j = 0; j < currClassesTaken.get(i).getData().size(); j++){
-//					System.out.println((currClassesTaken.get(i).getData().get(j)));
-//				}
-//				System.out.println("");
-//				System.out.println("");
-//			}
-//			
-//			long endTime = System.currentTimeMillis();
-//			long totaltime = endTime  - startTime;
-//			System.out.print(totaltime);
-//			System.exit(0);
-//		}
-		
-		setOfAvailableClasses.removeAll(this.classesTaken); //removes all classes taken from the list of classes to have it only have available classes for student to take
-
-		for(ClassInfo aClass: this.setOfAvailableClasses){//goes through set of available classes
-			if(aClass.getPrerequisites() == null){ //if no prerequisite, add class to available classes that user can take
-				this.availableClasses.add(aClass);	
-			}
 					
-			//if there's a prerequisite, check to see if the student has taken the classes needed to add class to available classes that user can take
-			else if(aClass.getPrerequisites() != null && this.classesTaken.containsAll(aClass.getPrerequisites())) { 
-				this.availableClasses.add(aClass);	
-			}
-		}	
-		return this.availableClasses;
+		return availableClasses;
 		
 	}
 		
-	//make method that checks classes inside arraylist
-//	public boolean isClass(ArrayList<ClassInfo> availableClasses, ClassInfo aClass){
-//		
-//		int counter = 0;
-//		
-//		for(int i = 0; i < availableClasses.size(); i++){
-//			if(availableClasses.get(i).getName().equals(aClass.getName())){
-//				
-//			}else{
-//				counter++;
-//			}
-//		}
-//		
-//		
-//		if(counter == availableClasses.size()){
-//			return true;
-//		}else{
-//			return false;
-//		}
-//	}
+
 	
-//	public boolean checkGoalNode() {
-//		for(ClassInfo c: this.classesTaken) {
-//			if(c.getName().toLowerCase().equals("cs4963")) {
-//				for(ClassInfo i: this.classesTaken){
-//					if(i.getName().toLowerCase().equals("cs4962")){
-//						return true;
-//					}
-//				}
-//				return false;
-//				
-//			}
-//		}
-//		return false;
-//	}
 }
 

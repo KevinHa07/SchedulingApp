@@ -2,9 +2,13 @@ package BFS;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class FileInput {
-	private ArrayList<ClassInfo> classes;
+	private Map<String, ClassInfo> allClasses;
+	private List<String> classNames;
+	private List<ClassInfo> classes;
 	private File csvFile;
 	
 	public FileInput(String file) throws IOException {
@@ -25,6 +29,7 @@ public class FileInput {
             	System.out.println(line);
             	// use comma as separator
                 String[] classInfo = line.split(cvsSplitBy);
+                this.classNames.add(classInfo[0]);
                 addToClasses(classInfo);
             }
             
@@ -42,10 +47,23 @@ public class FileInput {
         }
 	}
 	
+	public Map<String, ClassInfo> getListOfAllClasses(){
+		for(int i = 0; i < classes.size(); i++) {
+			allClasses.put(classNames.get(i), classes.get(i));
+		}
+		return allClasses;
+	}
 	
-	public ArrayList<ClassInfo> getListOfClassInfo(){
+	public List<ClassInfo> getListOfClassInfo(){
 		if(this.classes != null) {
 			return this.classes;
+		}
+		return null;
+	}
+	
+	public List<String> getListOfClassNames(){
+		if(this.classes != null) {
+			return this.classNames;
 		}
 		return null;
 	}
@@ -107,11 +125,11 @@ public class FileInput {
 	//inserts prerequisite list to a classinfo object by comparing class name since the prerequisite list comes from csv file
 	private void insertPrereqisites(String[] classInfo, String[] prerequisites) {
 		ClassInfo ci;
-		ArrayList<ClassInfo> prereqs = new ArrayList<ClassInfo>();
+		List<String> prereqs = new ArrayList<String>();
     	for(int i = 0; i < prerequisites.length; i++) { //sorts through the string of prereqs
     		for(int j = 0; j < classes.size(); j++) {//goes through all the classes and checks if class matches name of prereq
     			if(prerequisites[i].toLowerCase().equals(classes.get(j).getName().toLowerCase())){
-    				prereqs.add(this.classes.get(j));
+    				prereqs.add(this.classes.get(j).getName());
     			}
     		}
     	}
@@ -124,13 +142,13 @@ public class FileInput {
 	//inserts corequisites list to a classinfo object by comparing class name since the corequisite list comes from csv file
 	private void insertCorequisites(String[] classInfo, String[] corequisites) {
 		ClassInfo ci;
-		ArrayList<ClassInfo> coreqs = new ArrayList<ClassInfo>();
+		List<String> coreqs = new ArrayList<String>();
     	for(int i = 0; i < corequisites.length; i++) { //sorts through the string of coreqs
     		for(int j = 0; j < this.classes.size(); j++) {
     			//need fix
     			//cant find class when its not in database yet
     			if(corequisites[i].toLowerCase().equals(this.classes.get(j).getName().toLowerCase())){//goes through all the classes and checks if class matches name of coreq
-    				coreqs.add(this.classes.get(j));
+    				coreqs.add(this.classes.get(j).getName());
     			}
     		}
     	}
@@ -143,12 +161,12 @@ public class FileInput {
 	private void insertCorequisitesPrerequisites(String[] classInfo, String[] prerequisites, 
 			 String[] corequisites) {
 		ClassInfo ci;
-		ArrayList<ClassInfo> prereqs = new ArrayList<ClassInfo>();
-		ArrayList<ClassInfo> coreqs = new ArrayList<ClassInfo>();
+		List<String> prereqs = new ArrayList<String>();
+		List<String> coreqs = new ArrayList<String>();
     	for(int i = 0; i < prerequisites.length; i++) {//sorts through the string of prereqs
     		for(int j = 0; j < this.classes.size(); j++) {//goes through all the classes and checks if class matches name of prereq
     			if(prerequisites[i].toLowerCase().equals(this.classes.get(j).getName().toLowerCase())){
-    				prereqs.add(this.classes.get(j));
+    				prereqs.add(this.classes.get(j).getName());
     			}
     		}
     	}
@@ -156,7 +174,7 @@ public class FileInput {
     	for(int i = 0; i < corequisites.length; i++) {//sorts through the string of prereqs
     		for(int j = 0; j < this.classes.size(); j++) {//goes through all the classes and checks if class matches name of coreq
     			if(corequisites[i].toLowerCase().equals(this.classes.get(j).getName().toLowerCase())){
-    				coreqs.add(this.classes.get(j));
+    				coreqs.add(this.classes.get(j).getName());
     			}
     		}
     	}

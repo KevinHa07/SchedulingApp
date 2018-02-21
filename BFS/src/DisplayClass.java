@@ -1,33 +1,35 @@
 package BFS;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class DisplayClass {
+public class DisplayClass { //ask george if this can be the main class
 
-	ArrayList<ClassInfo> ClassList = new ArrayList<>();
-	Scanner in = new Scanner(System.in);
+	static List<ClassInfo> ClassList = new ArrayList<>();
+	static Scanner in = new Scanner(System.in);
 
-	public DisplayClass(ArrayList<ClassInfo> listOfClassInfo) {
-		this.ClassList = listOfClassInfo;
+	public static void main(String args[]) throws IOException{
+		FileInput f = new FileInput("Sample_Classes.csv");
+		ClassList = f.getListOfClassInfo();
 		Display();
 	}
 
-	@SuppressWarnings("unused")
-	public void Display() {
-		ArrayList<ClassInfo> classesTaken = new ArrayList<>();
+	private static void Display() {
+		List<ClassInfo> classesTaken = new ArrayList<>();
 		int unitsMin;
 		int unitsMax;
 
-		// ask if user has taken class
+		// ask if user if they have taken class
 		for (int i = 0; i < ClassList.size(); i++) {
 			takenClass(i);
 		}
 
-		// display classes that have been taken
 		System.out.println();
 		System.out.println();
 		
+		// display classes that have been taken
 		for (int i = 0; i < ClassList.size(); i++) {
 			if (ClassList.get(i).isCompleted()) {
 				System.out.println(ClassList.get(i).toString());
@@ -48,7 +50,8 @@ public class DisplayClass {
 			
 	}
 
-	public void takenClass(int i) {
+	//this method goes through each class and asks if the user has taken them
+	private static void takenClass(int i) {
 		String option = "";
 		
 		System.out.println();
@@ -69,7 +72,8 @@ public class DisplayClass {
 		}
 	}
 	
-	public void whatGrade(int i){
+	//this method asks what grade the user received in their taken class
+	private static void whatGrade(int i){
 		String grade = "";
 		
 		System.out.println("Enter a grade:  ");

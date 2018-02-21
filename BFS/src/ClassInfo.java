@@ -1,13 +1,14 @@
 package BFS;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClassInfo {
 	
 	private String name;
 	private int courseNumber;
-	private ArrayList<ClassInfo> corequisites;
-	private ArrayList<ClassInfo> prerequisites;
+	private List<String> corequisites;
+	private List<String> prerequisites;
 	private int units;
 	private String grade;
 	private boolean completed;
@@ -16,7 +17,7 @@ public class ClassInfo {
 
 	//constructor if class has both prerequisite and corequisite
 	public ClassInfo(String name, int courseNumber, 
-			ArrayList<ClassInfo> corequisites, ArrayList<ClassInfo> prerequisites,
+			List<String> corequisites, List<String> prerequisites,
 			int units, String grade, boolean completed, boolean elective) {
 		this.name = name;
 		this.courseNumber = courseNumber;
@@ -30,9 +31,8 @@ public class ClassInfo {
 	
 	//constructor if class has just prerequisite
 	public ClassInfo(String name, int courseNumber, 
-			ArrayList<ClassInfo> prerequisites,
+			List<String> prerequisites,
 			int units, String grade, boolean completed, boolean elective) {
-		this();
 		this.name = name;
 		this.courseNumber = courseNumber;
 		this.prerequisites = prerequisites;
@@ -45,7 +45,7 @@ public class ClassInfo {
 	//constructor if class has just corequisite
 	public ClassInfo(String name, int courseNumber, 
 			int units, String grade, 
-			ArrayList<ClassInfo> corequisites, boolean completed, boolean elective) {
+			List<String> corequisites, boolean completed, boolean elective) {
 		this.name = name;
 		this.courseNumber = courseNumber;
 		this.corequisites = corequisites;
@@ -70,11 +70,11 @@ public class ClassInfo {
 		
 	}
 
-	public ArrayList<ClassInfo> getPrerequisites() {
+	public List<String> getPrerequisites() {
 		return prerequisites;
 	}
 
-	public void setPrerequisites(ArrayList<ClassInfo> prerequisites) {
+	public void setPrerequisites(List<String> prerequisites) {
 		this.prerequisites = prerequisites;
 	}
 
@@ -94,11 +94,11 @@ public class ClassInfo {
 		this.courseNumber = courseNumber;
 	}
 
-	public ArrayList<ClassInfo> getCorequisites() {
+	public List<String> getCorequisites() {
 		return corequisites;
 	}
 
-	public void setCorequisites(ArrayList<ClassInfo> corequisites) {
+	public void setCorequisites(List<String> corequisites) {
 		this.corequisites = corequisites;
 	}
 
@@ -134,11 +134,11 @@ public class ClassInfo {
 		this.isElective = isElective;
 	}
 	
-	private String convertToString(ArrayList<ClassInfo> ci) {
+	private String convertToString(List<String> ci) {
 		if(ci != null) {
 			String s = "";
-			for(ClassInfo c: ci){
-				s += c.getName() + ", ";
+			for(String c: ci){
+				s += c + ",";
 			}
 			
 			return s;
