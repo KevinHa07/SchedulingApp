@@ -21,7 +21,7 @@ public class AvailableClasses {
 	
 	//This method takes in the arraylist of ClassInfo to remove classes that the student has already taken from an arraylist of all classes
 	@SuppressWarnings("unchecked")
-	public List<String> checkAvailableClasses(List<String> allClasses, Map<String, ClassInfo> allClassInfo) {
+	public List<String> checkAvailableClasses(List<String> allClasses, Map<String, ClassInfo> allClassInfo, String semester) {
 		//creates a set of all classes
 		Set<String> setOfAvailableClasses = new HashSet<String>(allClasses);
 		
@@ -33,8 +33,10 @@ public class AvailableClasses {
 			for(String className: setOfAvailableClasses){
 				if(allClassInfo.containsKey(className)) {
 					ClassInfo classInfo = allClassInfo.get(className);
-					if(classInfo.getPrerequisites() == null){
-						availableClasses.add(className);
+					if(classInfo.getSemester().contains(semester)) {
+						if(classInfo.getPrerequisites() == null){
+							availableClasses.add(className);
+						}
 					}
 				}
 				
@@ -45,12 +47,14 @@ public class AvailableClasses {
 		for(String className: setOfAvailableClasses){
 			if(allClassInfo.containsKey(className)) {
 				ClassInfo classInfo = allClassInfo.get(className);
-				if(classInfo.getPrerequisites() == null){
-					availableClasses.add(className);
-				}
-				//if there's a prerequisite, check to see if the student has taken the classes needed to add class to available classes that user can take
-				else if(classInfo.getPrerequisites() != null && current.containsAll(classInfo.getPrerequisites())) { 
-					availableClasses.add(className);	
+				if(classInfo.getSemester().contains(semester)) {
+					if(classInfo.getPrerequisites() == null){
+						availableClasses.add(className);
+					}
+					//if there's a prerequisite, check to see if the student has taken the classes needed to add class to available classes that user can take
+					else if(classInfo.getPrerequisites() != null && current.containsAll(classInfo.getPrerequisites())) { 
+						availableClasses.add(className);	
+					}
 				}
 			}
 		}

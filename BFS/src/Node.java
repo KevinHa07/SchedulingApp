@@ -11,7 +11,7 @@ public class Node{
     private Node parent;
     private int numOfElectiveUnits = 0;
     private boolean isGoal = false;
-    
+    private List<String> availableClasses;
 
 	@SuppressWarnings("rawtypes")
 	private List<Node> path = new ArrayList<>();
@@ -28,17 +28,17 @@ public class Node{
         return children;
     }
 
-//	public void addChildren(List<Node> children) {
-//        for(Node t : children) {
-//            t.setParent(this);
-//        }
-//        this.children.addAll(children);
-//    }
-
-	public List<Node> getChildren() {
-		//find available classes and do combination in here
-        return null;
+	public List<Node> addChildren(List<Node> children) {
+        for(Node t : children) {
+            t.setParent(this);
+        }
+        return children;
     }
+
+//	public List<Node> getChildren() {
+//		//find available classes and do combination in here
+//        return null;
+//    }
     
 //    public void insertChildren(Node<?> child) {
 //    	
@@ -97,29 +97,28 @@ public class Node{
 			return;
 		}
 		for(Node n : this.path) {
-			for(String c : n.getData()) {
-				takenClassesFromPath.add(c);
-//				System.out.println(c);
-			}
+			takenClassesFromPath.addAll(n.getData());
 		}
-//		System.out.println("--------------------------------------");
-//		System.out.println("");
-//		System.out.println("");
-		
-		
-		
 	}
 	
 	public List<String> getTakenClasses(){
 		return takenClassesFromPath;
 	}
-
+	
 	public boolean isGoal() {
 		return isGoal;
 	}
 
 	public void setGoal(boolean isGoal) {
 		this.isGoal = isGoal;
+	}
+
+	public List<String> getAvailableClasses() {
+		return availableClasses;
+	}
+
+	public void setAvailableClasses(List<String> availableClasses) {
+		this.availableClasses = availableClasses;
 	}
 	
 	

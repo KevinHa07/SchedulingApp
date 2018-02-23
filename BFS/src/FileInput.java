@@ -2,6 +2,7 @@ package BFS;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -72,9 +73,16 @@ public class FileInput {
 	private void addToClasses(String[] classInfo) {
 		ClassInfo ci = null;
 		String delimeter = "/";
+		List<String> offeredSemesters;
         if(classInfo[2].equals("") && classInfo[3].equals("")) {//if there are no prerequisites
+        	if(classInfo[8].length() <= 1) {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(",")));
+        	}
+        	else {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(delimeter)));
+        	}
         	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-        			Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));
+        			Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]), offeredSemesters);
         	
         	this.classes.add(ci);
         	
@@ -87,8 +95,15 @@ public class FileInput {
         	else {
         		prerequisites = classInfo[3].split(delimeter);
         	}
+        	
+        	if(classInfo[8].length() <= 1) {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(",")));
+        	}
+        	else {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(delimeter)));
+        	}
 
-        	insertPrereqisites(classInfo, prerequisites);
+        	insertPrereqisites(classInfo, prerequisites, offeredSemesters);
         	
         }
         else if(classInfo[3].equals("") && !classInfo[2].equals("")){//if there are no prerequisites
@@ -99,7 +114,14 @@ public class FileInput {
         	else {
         		corequisites = classInfo[2].split(delimeter);
         	}
-        	insertCorequisites(classInfo, corequisites);
+        	
+        	if(classInfo[8].length() <= 1) {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(",")));
+        	}
+        	else {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(delimeter)));
+        	}
+        	insertCorequisites(classInfo, corequisites, offeredSemesters);
         	
         }
         else if(!classInfo[2].equals("") && !classInfo[3].equals("")){//if there are prerequisites and corequisites 
@@ -117,13 +139,20 @@ public class FileInput {
         	else {
         		corequisites = classInfo[2].split(delimeter);
         	}
-        	insertCorequisitesPrerequisites(classInfo, prerequisites, corequisites);
+        	
+        	if(classInfo[8].length() <= 1) {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(",")));
+        	}
+        	else {
+        		offeredSemesters = new ArrayList<>(Arrays.asList(classInfo[8].split(delimeter)));
+        	}
+        	insertCorequisitesPrerequisites(classInfo, prerequisites, corequisites, offeredSemesters);
         }
         
 	}
 	
 	//inserts prerequisite list to a classinfo object by comparing class name since the prerequisite list comes from csv file
-	private void insertPrereqisites(String[] classInfo, String[] prerequisites) {
+	private void insertPrereqisites(String[] classInfo, String[] prerequisites, List<String> offeredSemesters) {
 		ClassInfo ci;
 		List<String> prereqs = new ArrayList<String>();
     	for(int i = 0; i < prerequisites.length; i++) { //sorts through the string of prereqs
@@ -134,13 +163,13 @@ public class FileInput {
     		}
     	}
     	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-   				prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7])); 
+   				prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]), offeredSemesters); 
    		this.classes.add(ci);
     	
 	}
 	
 	//inserts corequisites list to a classinfo object by comparing class name since the corequisite list comes from csv file
-	private void insertCorequisites(String[] classInfo, String[] corequisites) {
+	private void insertCorequisites(String[] classInfo, String[] corequisites, List<String> offeredSemesters) {
 		ClassInfo ci;
 		List<String> coreqs = new ArrayList<String>();
     	for(int i = 0; i < corequisites.length; i++) { //sorts through the string of coreqs
@@ -153,13 +182,13 @@ public class FileInput {
     		}
     	}
     	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), coreqs, 
-    			Integer.parseInt(classInfo[4]),  classInfo[5], false, checkIsElective(classInfo[7]));
+    			Integer.parseInt(classInfo[4]),  classInfo[5], false, checkIsElective(classInfo[7]), offeredSemesters);
    		this.classes.add(ci);
 	}
 	
 	//inserts both corequisites and prerequisites list to a classinfo object by comparing class name since the both lists comes from csv file
 	private void insertCorequisitesPrerequisites(String[] classInfo, String[] prerequisites, 
-			 String[] corequisites) {
+			 String[] corequisites, List<String> offeredSemesters) {
 		ClassInfo ci;
 		List<String> prereqs = new ArrayList<String>();
 		List<String> coreqs = new ArrayList<String>();
@@ -179,7 +208,7 @@ public class FileInput {
     		}
     	}
     	ci = new ClassInfo(classInfo[0], Integer.parseInt(classInfo[1]), 
-    			coreqs, prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]));	
+    			coreqs, prereqs, Integer.parseInt(classInfo[4]), classInfo[5], false, checkIsElective(classInfo[7]), offeredSemesters);	
    		this.classes.add(ci); 	
 	}
 	
