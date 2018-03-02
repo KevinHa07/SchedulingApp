@@ -1,25 +1,29 @@
 package BFS;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-public class DisplayClass { //ask george if this can be the main class
+public class DisplayClass {
 
-	static List<ClassInfo> ClassList = new ArrayList<>();
-	static Scanner in = new Scanner(System.in);
+	List<ClassInfo> ClassList;
+	Scanner in = new Scanner(System.in);
 
-	public static void main(String args[]) throws IOException{
-		FileInput f = new FileInput("Sample_Classes.csv");
-		ClassList = f.getListOfClassInfo();
+	public DisplayClass(List<ClassInfo> list) {
+		this.ClassList = list;
 		Display();
 	}
+	
+	
 
-	private static void Display() {
-		List<ClassInfo> classesTaken = new ArrayList<>();
+	@SuppressWarnings("unused")
+	public void Display() {
+		List<String> classesTaken = new ArrayList<>();
 		int unitsMin;
 		int unitsMax;
+		
+		
 
 		// ask if user if they have taken class
 		for (int i = 0; i < ClassList.size(); i++) {
@@ -33,9 +37,17 @@ public class DisplayClass { //ask george if this can be the main class
 		for (int i = 0; i < ClassList.size(); i++) {
 			if (ClassList.get(i).isCompleted()) {
 				System.out.println(ClassList.get(i).toString());
-				classesTaken.add(ClassList.get(i));
+				classesTaken.add(ClassList.get(i).getName());
 			}
 
+		}
+		
+		//make static hashmap
+		//instead of having List of ClassInfo have list of strings with the class names and then the string of class names will have the key to the array of class info
+		HashMap<String, ClassInfo> map = new HashMap<>();
+		//store the classinfo in the hashmap
+		for(int i = 0; i < ClassList.size(); i++){
+			map.put(ClassList.get(i).getName(), ClassList.get(i));
 		}
 		
 		//ask how many units they want to take
@@ -45,13 +57,15 @@ public class DisplayClass { //ask george if this can be the main class
 		System.out.println("What is the maximum number of Units you would like to take per Semester. "); // put different recemendations, international students, part time full time, 12 is usual, 18 max
 		unitsMax = Integer.parseInt(in.next());
 		
+		
+		
 		//create tree
-		MakeTree mt = new MakeTree(classesTaken, ClassList, unitsMin, unitsMax);
+		MakeTree mt = new MakeTree(classesTaken, map, unitsMin, unitsMax);
 			
 	}
 
 	//this method goes through each class and asks if the user has taken them
-	private static void takenClass(int i) {
+	public void takenClass(int i) {
 		String option = "";
 		
 		System.out.println();
@@ -73,7 +87,7 @@ public class DisplayClass { //ask george if this can be the main class
 	}
 	
 	//this method asks what grade the user received in their taken class
-	private static void whatGrade(int i){
+	public void whatGrade(int i){
 		String grade = "";
 		
 		System.out.println("Enter a grade:  ");

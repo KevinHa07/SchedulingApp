@@ -9,7 +9,7 @@ import java.util.Map;
 public class FileInput {
 	private Map<String, ClassInfo> allClasses;
 	private List<String> classNames;
-	private List<ClassInfo> classes;
+	private List<ClassInfo> classes = new ArrayList<>();
 	private File csvFile;
 	
 	public FileInput(String file) throws IOException {
@@ -22,7 +22,7 @@ public class FileInput {
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
-        this.classes = new ArrayList<ClassInfo>();
+        this.classNames = new ArrayList<String>();
 
         try {
             br = new BufferedReader(new FileReader(this.csvFile));

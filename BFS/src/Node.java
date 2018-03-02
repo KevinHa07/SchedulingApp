@@ -2,18 +2,23 @@ package BFS;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Node{
     private List<String> classTaken;
-    @SuppressWarnings("rawtypes")
-	
+    
     private Node parent;
     private int numOfElectiveUnits = 0;
+    private String semesterCode;
     private boolean isGoal = false;
     private List<String> availableClasses;
+    
+    List<Node> children = new ArrayList<>();
+    List<SemesterCourses> semesterCourses;
 
-	@SuppressWarnings("rawtypes")
 	private List<Node> path = new ArrayList<>();
     private List<String> takenClassesFromPath = new ArrayList<String>();
 
@@ -22,24 +27,35 @@ public class Node{
     }
 
     public List<Node> addChild(Node child) {
-    	List<Node> children = new ArrayList<>();
+    	
         child.setParent(this);
         children.add(child);
         return children;
     }
 
-	public List<Node> addChildren(List<Node> children) {
+	public void addChildren(List<Node> children) {
         for(Node t : children) {
             t.setParent(this);
         }
-        return children;
+        this.children.addAll(children);
     }
 
-//	public List<Node> getChildren() {
-//		//find available classes and do combination in here
-//        return null;
-//    }
-    
+	public List<Node> getChildren(HashMap<String, ClassInfo> listOfClasses, List<String> classesTaken, int unitsMin, int unitsMax, String semester) {
+		
+		Set<String> keySet = listOfClasses.keySet();
+		List<String> allClasses = new ArrayList<String>(keySet);
+		
+		//find classes that are available to take next
+		AvailableClasses av = new AvailableClasses(classesTaken);
+		List<String> available = av.checkAvailableClasses(allClasses, listOfClasses, semester, this.numOfElectiveUnits);
+				
+		//find all combination
+		Combinations cb = new Combinations();
+		List<Node> combOfClasses = cb.findCombination(listOfClasses, available, unitsMin, unitsMax);
+				
+		return combOfClasses;
+        
+    }
 //    public void insertChildren(Node<?> child) {
 //    	
 //    }
@@ -78,7 +94,6 @@ public class Node{
 		
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void addToPath(Node currentNode, List<Node> pathNode) {
 		for(Node n : pathNode) {
 			this.path.add(n);
@@ -120,6 +135,24 @@ public class Node{
 	public void setAvailableClasses(List<String> availableClasses) {
 		this.availableClasses = availableClasses;
 	}
+
+	public String getSemesterCode() {
+		return semesterCode;
+	}
+
+	public void setSemesterCode(String semesterCode) {
+		this.semesterCode = semesterCode;
+	}
+
+	public List<SemesterCourses> getSemesterCourses() {
+		for(Node n : this.path) {
+			SemesterCourses sc = new SemesterCourses(semesterCode, n.getData()); 
+			semesterCourses.add(sc);
+		}
+		return semesterCourses;
+	}
+	
+	
 	
 	
 	
